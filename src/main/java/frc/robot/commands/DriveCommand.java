@@ -5,6 +5,8 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class DriveCommand extends Command {
     private DoubleSupplier speed;
     private double speedScale = .80;
@@ -18,6 +20,8 @@ public class DriveCommand extends Command {
     private double negativeTurnRateLimit = -10.0;
     private SlewRateLimiter turnLimiter = new SlewRateLimiter(positiveTurnRateLimit, negativeTurnRateLimit, 0);
 
+    private boolean squaredInputs = true;
+
     private DriveSubsystem driveSubsystem;
 
     public DriveCommand(DoubleSupplier speed, DoubleSupplier turn, DriveSubsystem driveSubsystem) {
@@ -30,12 +34,40 @@ public class DriveCommand extends Command {
     @Override
     public void initialize() {
         driveSubsystem.stop();
+
+        SmartDashboard.putNumber("Speed Scale", speedScale);
+        SmartDashboard.putNumber("Positive Speed Rate Limit", positiveSpeedRateLimit);
+        SmartDashboard.putNumber("Negative Speed Rate Limit", negativeSpeedRateLimit);
+        
+        SmartDashboard.putNumber("Turn Scale", turnScale);
+        SmartDashboard.putNumber("Positive Turn Rate Limit", positiveTurnRateLimit);
+        SmartDashboard.putNumber("Negative Turn Rate Limit", negativeTurnRateLimit);
+
+        SmartDashboard.putBoolean("Squaring Inputs", squaredInputs);
+
     }
 
     @Override
     public void execute() {
-        double driveSpeed = speed.getAsDouble() * speedScale * Math.abs(speed.getAsDouble());
-        double turnSpeed = turn.getAsDouble() * turnScale * Math.abs(turn.getAsDouble());
+        speedScale = SmartDashboard.getNumber("Speed Scale", speedScale);
+        double newPositiveSpeedRateLimit = SmartDashboard.getNumber("Positive Speed Rate Limit", positiveSpeedRateLimit);
+        double newNegativeSpeedRateLimit = SmartDashboard.getNumber("Negative Speed Rate Limit", negativeSpeedRateLimit);
+        
+        turnScale = SmartDashboard.getNumber("Turn Scale", turnScale);
+        double newPositiveTurnRateLimit = SmartDashboard.getNumber("Positive Turn Rate Limit", positiveTurnRateLimit);
+        double newNegativeTurnRateLimit = SmartDashboard.getNumber("Negative Turn Rate Limit", negativeTurnRateLimit);
+
+        squaredInputs = SmartDashboard.getBoolean("Squaring Inputs", squaredInputs);
+
+        if (newPositiveSpeedRateLimit != positiveSpeedRateLimit || newNegativeSpeedRateLimit != negativeSpeedRateLimit) {
+            speedLimiter = new SlewRateLimiter(positiveSpeedRateLimit, negativeSpeedRateLimit, 0);
+        }
+        if (newPositiveTurnRateLimit != positiveTurnRateLimit || newNegativeTurnRateLimit != negativeTurnRateLimit) {
+            turnLimiter = new SlewRateLimiter(positiveTurnRateLimit, negativeTurnRateLimit, 0);
+        }
+
+        double driveSpeed = speed.getAsDouble() * speedScale * (squaredInputs ? Math.abs(speed.getAsDouble()) : 1);
+        double turnSpeed = turn.getAsDouble() * turnScale * (squaredInputs ? Math.abs(turn.getAsDouble()) : 1);
 
         driveSubsystem.drive(speedLimiter.calculate(driveSpeed), turnLimiter.calculate(turnSpeed));
     }
