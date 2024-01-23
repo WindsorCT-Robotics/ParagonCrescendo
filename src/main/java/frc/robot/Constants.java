@@ -26,6 +26,8 @@ public class Constants {
     public static final int RIGHT_MAIN_TALONFX = 3;
     public static final int RIGHT_FOLLOWER_TALONFX = 4;
 
+    public static final int PIGEON = 20;
+
    /**
     * public static final class DriveConstants {
     *   public static final int kLeftMotor1Port = 0;

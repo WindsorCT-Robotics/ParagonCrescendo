@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +26,11 @@ public class DriveSubsystem extends SubsystemBase {
     // Differential Drive object to build Drivetrain with
     private DifferentialDrive drive;
 
+    // Pigeon
+    // x is positive right and negative left
+    // y is positive forward and negative backwards
+    private final Pigeon2 pigeon = new Pigeon2(PIGEON, CAN_BUS_NAME);
+
     public DriveSubsystem() {
         initializeTalonFX(leftMain.getConfigurator(), "left");
         initializeTalonFX(leftFollower.getConfigurator(), "left");
@@ -35,36 +41,43 @@ public class DriveSubsystem extends SubsystemBase {
         rightFollower.setControl(new Follower(rightMain.getDeviceID(), false));
 
         drive = new DifferentialDrive(leftMain, rightMain);
+
+        pigeon.reset();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Position/Left Main (m)", -rotationsToMeters(leftMain.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Position/Left Follower (m)", -rotationsToMeters(leftFollower.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Position/Right Main (m)", -rotationsToMeters(rightMain.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Position/Right Follower (m)", -rotationsToMeters(rightFollower.getPosition().getValueAsDouble()));
+        // SmartDashboard.putNumber("Position/Left Main (m)", -rotationsToMeters(leftMain.getPosition().getValueAsDouble()));
+        // SmartDashboard.putNumber("Position/Left Follower (m)", -rotationsToMeters(leftFollower.getPosition().getValueAsDouble()));
+        // SmartDashboard.putNumber("Position/Right Main (m)", -rotationsToMeters(rightMain.getPosition().getValueAsDouble()));
+        // SmartDashboard.putNumber("Position/Right Follower (m)", -rotationsToMeters(rightFollower.getPosition().getValueAsDouble()));
 
-        SmartDashboard.putNumber("Velocity/Left Main (m-s)", -rotationsToMeters(leftMain.getVelocity().getValueAsDouble()));
-        SmartDashboard.putNumber("Velocity/Left Follower (m-s)", -rotationsToMeters(leftFollower.getVelocity().getValueAsDouble()));
-        SmartDashboard.putNumber("Velocity/Right Main (m-s)", -rotationsToMeters(rightMain.getVelocity().getValueAsDouble()));
-        SmartDashboard.putNumber("Velocity/Right Follower (m-s)", -rotationsToMeters(rightFollower.getVelocity().getValueAsDouble()));
+        // SmartDashboard.putNumber("Velocity/Left Main (m-s)", -rotationsToMeters(leftMain.getVelocity().getValueAsDouble()));
+        // SmartDashboard.putNumber("Velocity/Left Follower (m-s)", -rotationsToMeters(leftFollower.getVelocity().getValueAsDouble()));
+        // SmartDashboard.putNumber("Velocity/Right Main (m-s)", -rotationsToMeters(rightMain.getVelocity().getValueAsDouble()));
+        // SmartDashboard.putNumber("Velocity/Right Follower (m-s)", -rotationsToMeters(rightFollower.getVelocity().getValueAsDouble()));
         
-        SmartDashboard.putNumber("Acceleration/Left Main (m-s-s)", -rotationsToMeters(leftMain.getAcceleration().getValueAsDouble()));
-        SmartDashboard.putNumber("Acceleration/Left Follower (m-s-s)", -rotationsToMeters(leftFollower.getAcceleration().getValueAsDouble()));
-        SmartDashboard.putNumber("Acceleration/Right Main (m-s-s)", -rotationsToMeters(rightMain.getAcceleration().getValueAsDouble()));
-        SmartDashboard.putNumber("Acceleration/Right Follower (m-s-s)", -rotationsToMeters(rightFollower.getAcceleration().getValueAsDouble()));
+        // SmartDashboard.putNumber("Acceleration/Left Main (m-s-s)", -rotationsToMeters(leftMain.getAcceleration().getValueAsDouble()));
+        // SmartDashboard.putNumber("Acceleration/Left Follower (m-s-s)", -rotationsToMeters(leftFollower.getAcceleration().getValueAsDouble()));
+        // SmartDashboard.putNumber("Acceleration/Right Main (m-s-s)", -rotationsToMeters(rightMain.getAcceleration().getValueAsDouble()));
+        // SmartDashboard.putNumber("Acceleration/Right Follower (m-s-s)", -rotationsToMeters(rightFollower.getAcceleration().getValueAsDouble()));
 
-        SmartDashboard.putNumber("MotorTemperature/Left Main (C)", Math.round(leftMain.getDeviceTemp().getValueAsDouble()));
-        SmartDashboard.putNumber("MotorTemperature/Left Follower (C)", Math.round(leftFollower.getDeviceTemp().getValueAsDouble()));
-        SmartDashboard.putNumber("MotorTemperature/Right Main (C)", Math.round(rightMain.getDeviceTemp().getValueAsDouble()));
-        SmartDashboard.putNumber("MotorTemperature/Right Follower (C)", Math.round(rightFollower.getDeviceTemp().getValueAsDouble()));
+        // SmartDashboard.putNumber("MotorTemperature/Left Main (C)", Math.round(leftMain.getDeviceTemp().getValueAsDouble()));
+        // SmartDashboard.putNumber("MotorTemperature/Left Follower (C)", Math.round(leftFollower.getDeviceTemp().getValueAsDouble()));
+        // SmartDashboard.putNumber("MotorTemperature/Right Main (C)", Math.round(rightMain.getDeviceTemp().getValueAsDouble()));
+        // SmartDashboard.putNumber("MotorTemperature/Right Follower (C)", Math.round(rightFollower.getDeviceTemp().getValueAsDouble()));
 
-        SmartDashboard.putNumber("MotorCurrent/Left Main", leftMain.getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("MotorCurrent/Left Follower", leftFollower.getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("MotorCurrent/Right Main", rightMain.getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("MotorCurrent/Right Follower", rightFollower.getStatorCurrent().getValueAsDouble());
+        // SmartDashboard.putNumber("MotorCurrent/Left Main", leftMain.getStatorCurrent().getValueAsDouble());
+        // SmartDashboard.putNumber("MotorCurrent/Left Follower", leftFollower.getStatorCurrent().getValueAsDouble());
+        // SmartDashboard.putNumber("MotorCurrent/Right Main", rightMain.getStatorCurrent().getValueAsDouble());
+        // SmartDashboard.putNumber("MotorCurrent/Right Follower", rightFollower.getStatorCurrent().getValueAsDouble());
 
         SmartDashboard.putBoolean("Brake Mode", brakeMode);
+
+        double accelerationY = (-pigeon.getAccelerationY().getValueAsDouble()+pigeon.getGravityVectorY().getValueAsDouble()) * 9.81;
+        SmartDashboard.putNumber("Pigeon Acceleration Y", (Math.abs(accelerationY) < 0.1 ? 0 : accelerationY));
+
+        SmartDashboard.putNumber("Pigeon Rotation (CW)", pigeon.getAngle());
     }
 
     private void initializeTalonFX(TalonFXConfigurator cfg, String side) {
@@ -101,5 +114,9 @@ public class DriveSubsystem extends SubsystemBase {
     public void stop() {
         leftMain.set(0);
         rightMain.set(0);
+    }
+
+    public double getAngle() {
+        return pigeon.getAngle();
     }
 }                                                 
