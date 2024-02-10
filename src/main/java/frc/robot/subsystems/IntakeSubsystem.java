@@ -28,11 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
         rollers.set(speed.asDouble());
     }
 
-    /* BeamBreaker is true when beam is unbroken (open)
-     * BeamBreaker is false when beam is broken (closed)
-     */
-    public boolean getBeamBreaker(){
-        return beamBreaker.get();
+    public boolean isBeamBroken(){
+        return !beamBreaker.get();
     }
     
     public void stop() {

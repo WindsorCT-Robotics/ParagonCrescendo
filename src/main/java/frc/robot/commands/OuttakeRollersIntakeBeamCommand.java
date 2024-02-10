@@ -32,6 +32,6 @@ public class OuttakeRollersIntakeBeamCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getBeamBreaker();
+        return !intake.isBeamBroken();
     }
 }

@@ -33,6 +33,6 @@ public class MoveBeamBreakerCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return !intakeSubsystem.getBeamBreaker();
+        return intakeSubsystem.isBeamBroken();
     }
 }                             
