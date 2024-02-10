@@ -26,7 +26,30 @@ public class Constants {
     public static final int RIGHT_MAIN_TALONFX = 3;
     public static final int RIGHT_FOLLOWER_TALONFX = 4;
 
-    public static final int INTAKE_BEAMBREAKER = 0;
+    public static final int INTAKE_ROLLER_MOTOR_CANID = 5;
+    public static final int INTAKE_BEAMBREAKER = 0;    
+
+    public static final class Arm {
+        public static final int MOTOR_CANID = 6;
+
+        public static final double PID_kP = 0.0;
+        public static final double ROTATION_VELOCITY_CAP = 1;
+        public static final double ROTATION_ACCELERATION_CAP = 1;
+
+        public static final double ROTATION_kG = 0.54;
+        public static final double ROTATION_kS = 0;
+        public static final double ROTATION_kV = 1.46;
+        public static final double ROTATION_kA = 0.03;
+
+        public static final double ROTATION_SCALE = (25) * (44 / 18) * (44 / 18);
+        public static final double ROTATION_VELOCITY = 0.8;
+
+        public static final double ROTATION_OFFSET = -1 * 35 * Math.PI / 180 * ROTATION_SCALE; // Offset down
+        public static final double ROTATION_CAP = 2 * Math.PI / 3 * ROTATION_SCALE;
+    }
+
+    public static final int OUTTAKE_ROLLER_MOTOR_CANID = 7;
+    public static final int OUTTAKE_BEAM_BREAKER_PIN = 1;
 
    /**
     * public static final class DriveConstants {
