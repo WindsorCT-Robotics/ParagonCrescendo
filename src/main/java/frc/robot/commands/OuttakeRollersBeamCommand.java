@@ -31,6 +31,6 @@ public class OuttakeRollersBeamCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return outtake.getBeamBreaker();
+        return !outtake.isBeamBroken();
     }
 }
