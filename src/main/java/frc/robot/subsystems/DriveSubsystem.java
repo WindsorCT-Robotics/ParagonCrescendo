@@ -10,7 +10,10 @@ import com.ctre.phoenix6.controls.Follower;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Units.GearRatio;
+import frc.robot.Units.Meters;
+import frc.robot.Units.Radians;
+import frc.robot.Units.Rotations;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -20,7 +23,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final TalonFX rightMain = new TalonFX(RIGHT_MAIN_TALONFX, CAN_BUS_NAME);
     private final TalonFX rightFollower = new TalonFX(RIGHT_FOLLOWER_TALONFX, CAN_BUS_NAME);
 
-    private final boolean brakeMode = true; // true is Brake, false is Coast
+    private final boolean isCoastMode = false;
+
+    private final GearRatio gearRatio = new GearRatio(8.45d);
+    private final Meters wheelDiameter = new Meters(0.1524);
+    private final Radians wheelCircumference = new Radians(Math.PI * wheelDiameter.asDouble());
 
     // Differential Drive object to build Drivetrain with
     private DifferentialDrive drive;
@@ -39,20 +46,20 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Position/Left Main (m)", -rotationsToMeters(leftMain.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Position/Left Follower (m)", -rotationsToMeters(leftFollower.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Position/Right Main (m)", -rotationsToMeters(rightMain.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Position/Right Follower (m)", -rotationsToMeters(rightFollower.getPosition().getValueAsDouble()));
+        SmartDashboard.putNumber("Position/Left Main (m)", -rotationsToMetersAsDouble(new Rotations(leftFollower.getPosition().getValueAsDouble())));
+        SmartDashboard.putNumber("Position/Left Follower (m)", -rotationsToMetersAsDouble(new Rotations(leftFollower.getPosition().getValueAsDouble())));
+        SmartDashboard.putNumber("Position/Right Main (m)", -rotationsToMetersAsDouble(new Rotations(rightMain.getPosition().getValueAsDouble())));
+        SmartDashboard.putNumber("Position/Right Follower (m)", -rotationsToMetersAsDouble(new Rotations(rightFollower.getPosition().getValueAsDouble())));
 
-        SmartDashboard.putNumber("Velocity/Left Main (m-s)", -rotationsToMeters(leftMain.getVelocity().getValueAsDouble()));
-        SmartDashboard.putNumber("Velocity/Left Follower (m-s)", -rotationsToMeters(leftFollower.getVelocity().getValueAsDouble()));
-        SmartDashboard.putNumber("Velocity/Right Main (m-s)", -rotationsToMeters(rightMain.getVelocity().getValueAsDouble()));
-        SmartDashboard.putNumber("Velocity/Right Follower (m-s)", -rotationsToMeters(rightFollower.getVelocity().getValueAsDouble()));
+        SmartDashboard.putNumber("Velocity/Left Main (m-s)", -rotationsToMetersAsDouble(new Rotations(leftMain.getVelocity().getValueAsDouble())));
+        SmartDashboard.putNumber("Velocity/Left Follower (m-s)", -rotationsToMetersAsDouble(new Rotations(leftFollower.getVelocity().getValueAsDouble())));
+        SmartDashboard.putNumber("Velocity/Right Main (m-s)", -rotationsToMetersAsDouble(new Rotations(rightMain.getVelocity().getValueAsDouble())));
+        SmartDashboard.putNumber("Velocity/Right Follower (m-s)", -rotationsToMetersAsDouble(new Rotations(rightFollower.getVelocity().getValueAsDouble())));
         
-        SmartDashboard.putNumber("Acceleration/Left Main (m-s-s)", -rotationsToMeters(leftMain.getAcceleration().getValueAsDouble()));
-        SmartDashboard.putNumber("Acceleration/Left Follower (m-s-s)", -rotationsToMeters(leftFollower.getAcceleration().getValueAsDouble()));
-        SmartDashboard.putNumber("Acceleration/Right Main (m-s-s)", -rotationsToMeters(rightMain.getAcceleration().getValueAsDouble()));
-        SmartDashboard.putNumber("Acceleration/Right Follower (m-s-s)", -rotationsToMeters(rightFollower.getAcceleration().getValueAsDouble()));
+        SmartDashboard.putNumber("Acceleration/Left Main (m-s-s)", -rotationsToMetersAsDouble(new Rotations(leftMain.getAcceleration().getValueAsDouble())));
+        SmartDashboard.putNumber("Acceleration/Left Follower (m-s-s)", -rotationsToMetersAsDouble(new Rotations(leftFollower.getAcceleration().getValueAsDouble())));
+        SmartDashboard.putNumber("Acceleration/Right Main (m-s-s)", -rotationsToMetersAsDouble(new Rotations(rightMain.getAcceleration().getValueAsDouble())));
+        SmartDashboard.putNumber("Acceleration/Right Follower (m-s-s)", -rotationsToMetersAsDouble(new Rotations(rightFollower.getAcceleration().getValueAsDouble())));
 
         SmartDashboard.putNumber("MotorTemperature/Left Main (C)", Math.round(leftMain.getDeviceTemp().getValueAsDouble()));
         SmartDashboard.putNumber("MotorTemperature/Left Follower (C)", Math.round(leftFollower.getDeviceTemp().getValueAsDouble()));
@@ -64,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("MotorCurrent/Right Main", rightMain.getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("MotorCurrent/Right Follower", rightFollower.getStatorCurrent().getValueAsDouble());
 
-        SmartDashboard.putBoolean("Brake Mode", brakeMode);
+        SmartDashboard.putBoolean("Coast Mode Enabled", isCoastMode);
     }
 
     private void initializeTalonFX(TalonFXConfigurator cfg, String side) {
@@ -76,10 +83,10 @@ public class DriveSubsystem extends SubsystemBase {
             toApply.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         }
         
-        if (brakeMode) {
-            toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        } else {
+        if (isCoastMode) {
             toApply.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        } else {
+            toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         }
         
         cfg.apply(toApply);
@@ -88,14 +95,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void drive(double speed, double turn) {
         drive.curvatureDrive(speed, turn, true);
-    }   
+    }
     
-    private static double rotationsToMeters(double rotations) {
-        final double gearRatio = 8.45; // 8.45:1 gear ratio
-        final double wheelDiameter = 0.1524; // 6-inch wheel diameter in meters
-        final double wheelCircumference = (Math.PI * wheelDiameter);
-
-        return rotations / gearRatio * wheelCircumference;
+    private double rotationsToMetersAsDouble(Rotations rotations) {
+        return
+            rotations.asMeters(gearRatio, wheelCircumference)
+                     .asDouble();
     }
     
     public void stop() {

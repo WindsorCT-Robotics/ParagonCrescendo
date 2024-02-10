@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Units.Percent;
 import frc.robot.subsystems.OuttakeSubsystem;
 
 import static frc.robot.Constants.OUTTAKE_MOTOR_TARGET_PERCENT;
@@ -20,7 +21,7 @@ public class OuttakeRollersBeamCommand extends Command {
 
     @Override
     public void execute() {
-        outtake.moveRollers(OUTTAKE_MOTOR_TARGET_PERCENT);
+        outtake.moveRollers(new Percent(OUTTAKE_MOTOR_TARGET_PERCENT));
     }
 
     @Override
@@ -30,6 +31,6 @@ public class OuttakeRollersBeamCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return outtake.getBeamBreaker();
+        return !outtake.isBeamBroken();
     }
 }
