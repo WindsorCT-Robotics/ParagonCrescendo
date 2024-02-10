@@ -12,7 +12,7 @@ public class IntakeNoteCommand extends SequentialCommandGroup{
             new IntakeRollersNoBeamCommand(intake),
             new ParallelDeadlineGroup(
                 new IntakeRollersBeamCommand(intake),
-                new OuttakeRollersBeamCommand(outtake, intake)
+                new OuttakeRollersIntakeBeamCommand(outtake, intake)
             ),
             new OuttakeRollersAdjustCommand(outtake)
         );

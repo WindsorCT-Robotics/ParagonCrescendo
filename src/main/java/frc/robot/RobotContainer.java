@@ -81,6 +81,9 @@ public class RobotContainer {
 
     // Intake note from ground
     driveController.leftBumper().onTrue(new IntakeNoteCommand(intake, outtake));
+
+    // Amp Score with arm moving
+    driveController.rightBumper().onTrue(new AmpScoreCommand(arm, outtake));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
