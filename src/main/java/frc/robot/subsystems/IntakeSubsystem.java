@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Units.Percent;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,8 +24,8 @@ public class IntakeSubsystem extends SubsystemBase {
        SmartDashboard.putBoolean("Intake Beam Breaker ", beamBreaker.get());
     }
 
-    public void moveRollers(double speed) {
-        rollers.set(speed);
+    public void moveRollers(Percent speed) {
+        rollers.set(speed.asDouble());
     }
 
     /* BeamBreaker is true when beam is unbroken (open)

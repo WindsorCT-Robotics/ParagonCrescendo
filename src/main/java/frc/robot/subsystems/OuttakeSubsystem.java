@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Units.Percent;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -26,8 +27,8 @@ public class OuttakeSubsystem extends SubsystemBase {
        SmartDashboard.putBoolean("Outtake Beam Breaker ", beamBreaker.get());
     }
 
-    public void moveRollers(double speed) {
-        rollerMotor.set(speed);
+    public void moveRollers(Percent speed) {
+        rollerMotor.set(speed.asDouble());
     }
 
     /* BeamBreaker is true when beam is unbroken (open)

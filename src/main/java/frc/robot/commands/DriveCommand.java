@@ -8,13 +8,13 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCommand extends Command {
-    private DoubleSupplier speed;
+    private final DoubleSupplier speed;
     private double speedScale = .80;
     private double positiveSpeedRateLimit = 5.0;
     private double negativeSpeedRateLimit = -5.0;
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(positiveSpeedRateLimit, negativeSpeedRateLimit, 0);
     
-    private DoubleSupplier turn;
+    private final DoubleSupplier turn;
     private double turnScale = .250;
     private double positiveTurnRateLimit = 10.0;
     private double negativeTurnRateLimit = -10.0;
@@ -22,7 +22,7 @@ public class DriveCommand extends Command {
 
     private boolean squaredInputs = true;
 
-    private DriveSubsystem driveSubsystem;
+    private final DriveSubsystem driveSubsystem;
 
     public DriveCommand(DoubleSupplier speed, DoubleSupplier turn, DriveSubsystem driveSubsystem) {
         this.speed = speed;
