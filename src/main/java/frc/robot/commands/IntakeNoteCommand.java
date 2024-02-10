@@ -3,14 +3,18 @@ package frc.robot.commands;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 
-public class IntakeNoteCommand {
-    private final IntakeSubsystem intake;
-    private final OuttakeSubsystem outtake;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
+public class IntakeNoteCommand extends SequentialCommandGroup{
     public IntakeNoteCommand(IntakeSubsystem intake, OuttakeSubsystem outtake) {
-        this.intake = intake;
-        this.outtake = outtake;
+        addCommands(
+            new IntakeRollersNoBeamCommand(intake),
+            new ParallelDeadlineGroup(
+                new IntakeRollersBeamCommand(intake),
+                new OuttakeRollersIntakeBeamCommand(outtake, intake)
+            ),
+            new OuttakeRollersAdjustCommand(outtake)
+        );
     }
-
-    
 }
