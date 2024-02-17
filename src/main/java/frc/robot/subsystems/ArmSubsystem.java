@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Units.Radians;
 import frc.robot.Units.Rotations;
 
@@ -12,6 +13,9 @@ import com.revrobotics.RelativeEncoder;
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax armMotor;
     private final RelativeEncoder armEncoder;
+    private final DigitalInput armHomeLimit = new DigitalInput(Arm.ARM_HOME_LIMIT);
+    private final DigitalInput armExtendLimit = new DigitalInput(Arm.ARM_EXTEND_LIMIT);
+
 
     public enum ArmState {
         INSIDE,
@@ -38,6 +42,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getEncoderPosition() {
         return armEncoder.getPosition();
+    }
+
+    public boolean isHome() {
+        return armHomeLimit.get();
+    }
+
+    public boolean isFullyExtended() {
+        return armExtendLimit.get();
     }
 
     public ArmState getArmState() {

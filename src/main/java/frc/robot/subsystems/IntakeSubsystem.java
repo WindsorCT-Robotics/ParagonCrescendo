@@ -16,7 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem() {
         rollers = new CANSparkMax(INTAKE_ROLLER_MOTOR_CANID, MotorType.kBrushless);
-        beamBreaker = new DigitalInput(INTAKE_BEAMBREAKER);
+        beamBreaker = new DigitalInput(INTAKE_BEAM_BREAKER_PIN);
     }
 
     @Override

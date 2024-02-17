@@ -8,10 +8,12 @@ public class Constants {
     public static final int RIGHT_FOLLOWER_TALONFX = 4;
 
     public static final int INTAKE_ROLLER_MOTOR_CANID = 5;
-    public static final int INTAKE_BEAMBREAKER = 0;    
+    public static final int INTAKE_BEAM_BREAKER_PIN = 0;    
 
     public static final class Arm {
         public static final int MOTOR_CANID = 6;
+        public static final int ARM_HOME_LIMIT = 3;
+        public static final int ARM_EXTEND_LIMIT = 4;
 
         public static final double ROTATION_SCALE = (25) * ((double) 44 / 18) * ((double) 44 / 18);
         public static final double ROTATION_VELOCITY = 0.8;
