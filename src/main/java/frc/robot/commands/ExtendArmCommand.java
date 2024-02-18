@@ -1,13 +1,11 @@
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class HomeArmCommand extends Command {
-
+public class ExtendArmCommand extends Command {
     private final ArmSubsystem arm;
 
-    public HomeArmCommand(ArmSubsystem arm) {
+    public ExtendArmCommand(ArmSubsystem arm) {
         this.arm = arm;
     }
 
@@ -17,7 +15,7 @@ public class HomeArmCommand extends Command {
 
     @Override
     public void execute() {
-        arm.home();
+        arm.extend();
     }
 
     @Override
@@ -30,7 +28,7 @@ public class HomeArmCommand extends Command {
     @Override
     public boolean isFinished() {
         switch (arm.getArmState()) {
-            case RETRACTED:
+            case EXTENDED:
                 return true;
         
             default:

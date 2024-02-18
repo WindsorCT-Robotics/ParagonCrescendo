@@ -31,9 +31,6 @@ public class OuttakeSubsystem extends SubsystemBase {
         rollerMotor.set(speed.asDouble());
     }
 
-    /* BeamBreaker is true when beam is unbroken (open)
-     * BeamBreaker is false when beam is broken (closed)
-     */
     public boolean isBeamBroken() {
         return !beamBreaker.get();
     }
@@ -49,4 +46,4 @@ public class OuttakeSubsystem extends SubsystemBase {
     public void stop() {
        rollerMotor.stopMotor();
     }
-}                                                 
+}
