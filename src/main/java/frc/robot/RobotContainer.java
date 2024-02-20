@@ -61,13 +61,19 @@ public class RobotContainer {
     outtake = new OuttakeSubsystem();
 
     configureButtonBindings();
-
-    CommandScheduler.getInstance().schedule(new HomeArmCommand(arm));
   }
 
   public static RobotContainer getInstance() {
     return m_robotContainer;
   }
+
+  public void armHomeIfUnknown(CommandScheduler cmd){
+    if (arm.getArmState() == ArmSubsystem.ArmState.UNKNOWN) {
+      cmd.schedule(new HomeArmCommand(arm));
+    }
+  }
+
+
 
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
