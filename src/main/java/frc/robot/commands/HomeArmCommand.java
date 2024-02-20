@@ -13,11 +13,12 @@ public class HomeArmCommand extends Command {
 
     @Override
     public void initialize() {
+        arm.home();
     }
 
     @Override
     public void execute() {
-        arm.home();
+        
     }
 
     @Override

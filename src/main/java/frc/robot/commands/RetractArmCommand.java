@@ -12,11 +12,11 @@ public class RetractArmCommand extends Command {
 
     @Override
     public void initialize() {
+        arm.retract();
     }
 
     @Override
     public void execute() {
-        arm.retract();
     }
 
     @Override

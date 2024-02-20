@@ -11,11 +11,11 @@ public class ExtendArmCommand extends Command {
 
     @Override
     public void initialize() {
+        arm.extend();
     }
 
     @Override
     public void execute() {
-        arm.extend();
     }
 
     @Override
