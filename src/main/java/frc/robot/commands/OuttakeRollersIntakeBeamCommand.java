@@ -22,7 +22,7 @@ public class OuttakeRollersIntakeBeamCommand extends Command {
 
     @Override
     public void execute() {
-        outtake.moveRollers(new Percent(OUTTAKE_MOTOR_TARGET_PERCENT));
+        outtake.moveRollers(new Percent(OUTTAKE_MOTOR_TARGET_PERCENT / 2));
     }
 
     @Override

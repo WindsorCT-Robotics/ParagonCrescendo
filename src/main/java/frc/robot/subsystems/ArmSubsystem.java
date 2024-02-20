@@ -18,8 +18,8 @@ public class ArmSubsystem extends SubsystemBase {
     private final DigitalInput armHomeLimit;
 
     private static final double ROTATION_SCALE = 25 * Math.pow((44d/18d), 2); // TODO: Ask Mr.G to break down this formula and eliminate all magic numbers
-    private static final Rotations ROTATION_CAP = new Rotations(ROTATION_SCALE / 3d);
-    private static final Percent ARM_ROTATION_POWER = new Percent(0.8d);
+    private static final Rotations ROTATION_CAP = new Rotations(ROTATION_SCALE / 2.6d);
+    private static final Percent ARM_ROTATION_POWER = new Percent(0.8d);    
 
     public enum ArmState {
         UNKNOWN,

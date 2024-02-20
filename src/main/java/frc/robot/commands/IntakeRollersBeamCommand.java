@@ -18,7 +18,7 @@ public class IntakeRollersBeamCommand extends Command {
 
     @Override
     public void execute() {
-        intake.moveRollers(new Percent(INTAKE_MOTOR_TARGET_PERCENT));
+        intake.moveRollers(new Percent(INTAKE_MOTOR_TARGET_PERCENT / 2));
     }
 
     @Override
