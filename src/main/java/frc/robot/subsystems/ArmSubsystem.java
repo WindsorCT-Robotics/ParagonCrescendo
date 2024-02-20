@@ -39,6 +39,10 @@ public class ArmSubsystem extends SubsystemBase {
         armHomeLimit = new DigitalInput(Arm.ARM_HOME_LIMIT);
     }
     
+    private boolean isAtLimit() {
+        return !armHomeLimit.get();
+    }
+
     @Override
     public void periodic() {
         switch (armState) {
@@ -56,7 +60,7 @@ public class ArmSubsystem extends SubsystemBase {
 
             case HOMING:
             case RETRACTING:
-                if (armHomeLimit.get()) {
+                if (isAtLimit()) {
                     armMotor.stopMotor();
                     if (armState == ArmState.HOMING) {
                         armEncoder.setPosition(0);
@@ -66,7 +70,7 @@ public class ArmSubsystem extends SubsystemBase {
                 break;
         }
 
-        SmartDashboard.putBoolean("Home Position Switch", armHomeLimit.get());
+        SmartDashboard.putBoolean("Home Position Switch", isAtLimit());
         SmartDashboard.putNumber("Max Travel Distance", ROTATION_CAP.asDouble());
         SmartDashboard.putNumber("Current Travel Distance", armEncoder.getPosition());
         SmartDashboard.putString("Arm State", armState.toString());
