@@ -20,13 +20,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private static final int MOTOR_MAX_RPM = 5600;
     private static final double MOTOR_GEAR_RATIO = (double) 14 / 48;
-    public static RotationsPerMinute targetRPM = new RotationsPerMinute(500, 1);
+    public static RotationsPerMinute targetRPM = new RotationsPerMinute(300, 1);
 
     public IntakeSubsystem() {
         rollers = new CANSparkMax(ROLLER_MOTOR_CANID, MotorType.kBrushless);
         beamBreaker = new DigitalInput(BEAM_BREAKER_PIN);
 
         SmartDashboard.putNumber("Intake Target RPM", targetRPM.asDouble());
+        SmartDashboard.putNumber("Intake Percent Speed",targetRPM.asDouble() / (MOTOR_MAX_RPM * MOTOR_GEAR_RATIO));
     }
 
     @Override

@@ -1,4 +1,6 @@
 package frc.robot.commands;
+
+import frc.robot.Units.Percent;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -16,7 +18,7 @@ public class IntakeRollersNoBeamCommand extends Command {
 
     @Override
     public void execute() {
-        intake.intakeRollers();
+        intake.moveRollers(new Percent(0.75));
     }
 
     @Override

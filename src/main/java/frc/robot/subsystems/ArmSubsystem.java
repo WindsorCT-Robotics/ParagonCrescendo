@@ -9,6 +9,8 @@ import frc.robot.Exceptions.ArmMovementException;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -37,6 +39,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
         armMotor = new CANSparkMax(MOTOR_CANID, MotorType.kBrushless);
+        armMotor.setIdleMode(IdleMode.kBrake);
+        armMotor.setInverted(true);
         armEncoder = armMotor.getEncoder();
         armState = ArmState.UNKNOWN;
         armHomeLimit = new DigitalInput(HOME_LIMIT_PIN);

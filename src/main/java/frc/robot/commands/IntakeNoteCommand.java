@@ -1,4 +1,5 @@
 package frc.robot.commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
@@ -14,6 +15,7 @@ public class IntakeNoteCommand extends SequentialCommandGroup{
                 new IntakeRollersBeamCommand(intake),
                 new OuttakeRollersIntakeBeamCommand(outtake, intake)
             ),
+            new WaitCommand(0.25),
             new OuttakeRollersAdjustCommand(outtake)
         );
     }

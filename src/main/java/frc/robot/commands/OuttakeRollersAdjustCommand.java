@@ -5,6 +5,7 @@ import frc.robot.subsystems.OuttakeSubsystem;
 
 public class OuttakeRollersAdjustCommand extends Command {
     private final OuttakeSubsystem outtake;
+    private double startingEncoderPosition;
 
     public OuttakeRollersAdjustCommand(OuttakeSubsystem outtake) {
         this.outtake = outtake;
@@ -12,12 +13,14 @@ public class OuttakeRollersAdjustCommand extends Command {
 
     @Override
     public void initialize() {
-        outtake.resetRollerEncoder();
+        startingEncoderPosition = outtake.getRollerPosition();
+        System.out.println(startingEncoderPosition);
     }
 
     @Override
     public void execute() {
         outtake.adjustRollers();
+        System.out.println(outtake.getRollerPosition());
     }
 
     @Override
@@ -27,6 +30,6 @@ public class OuttakeRollersAdjustCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(outtake.getRollerPosition()) >= outtake.getAdjustRotations().asDouble();
+        return Math.abs(Math.abs(outtake.getRollerPosition()) - Math.abs(startingEncoderPosition)) >= outtake.getAdjustRotations().asDouble();
     }
 }

@@ -33,12 +33,14 @@ public class OuttakeSubsystem extends SubsystemBase {
     public OuttakeSubsystem() {
         rollers = new CANSparkMax(ROLLER_MOTOR_CANID, MotorType.kBrushless);
         rollers.setIdleMode(IdleMode.kBrake);
+        rollers.setInverted(true);
         beamBreaker = new DigitalInput(BEAM_BREAKER_PIN);
         rollerEncoder = rollers.getEncoder();
 
         SmartDashboard.putNumber("Outtake Adjust Distance (inches)", adjustDistance);
         SmartDashboard.putNumber("Outtake Adjust Direction", adjustDirection);
         SmartDashboard.putNumber("Outtake Adjust Speed (percentage)", adjustSpeed.asDouble());
+        SmartDashboard.putNumber("Outtake Percent Speed", IntakeSubsystem.targetRPM.asDouble() / (MOTOR_MAX_RPM * MOTOR_GEAR_RATIO));
     }
 
     @Override

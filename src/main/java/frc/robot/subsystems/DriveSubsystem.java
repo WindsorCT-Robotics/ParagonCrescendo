@@ -94,7 +94,8 @@ public class DriveSubsystem extends SubsystemBase {
         } else {
             toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         }
-        
+        toApply.CurrentLimits.StatorCurrentLimitEnable = true;
+        toApply.CurrentLimits.StatorCurrentLimit = 90;
         cfg.apply(toApply);
         cfg.setPosition(0);
     }
