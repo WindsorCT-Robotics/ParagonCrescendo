@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeSubsystem extends SubsystemBase {
+    private static final int ROLLER_MOTOR_CANID = 5;
+    private static final int BEAM_BREAKER_PIN = 0;
+
     private final CANSparkMax rollers;
     private final DigitalInput beamBreaker;
 

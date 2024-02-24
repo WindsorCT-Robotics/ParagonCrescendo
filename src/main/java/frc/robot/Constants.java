@@ -1,9 +1,6 @@
 package frc.robot;
 
 public class Constants {
-    public static final int INTAKE_ROLLER_MOTOR_CANID = 5;
-    public static final int INTAKE_BEAM_BREAKER_PIN = 0;    
-
     public static final int OUTTAKE_ROLLER_MOTOR_CANID = 7;
     public static final int OUTTAKE_BEAM_BREAKER_PIN = 1;
 
