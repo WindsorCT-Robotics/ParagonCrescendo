@@ -1,5 +1,4 @@
 package frc.robot.subsystems;
-import static frc.robot.Constants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,6 +16,13 @@ import frc.robot.Units.Rotations;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
+    // CAN Bus Information
+    private static final String CAN_BUS_NAME = "rio";
+    private static final int LEFT_MAIN_TALONFX = 1;
+    private static final int LEFT_FOLLOWER_TALONFX = 2;
+    private static final int RIGHT_MAIN_TALONFX = 3;
+    private static final int RIGHT_FOLLOWER_TALONFX = 4;
+
     // 4 Motor Controllers for Drivetrain
     private final TalonFX leftMain = new TalonFX(LEFT_MAIN_TALONFX, CAN_BUS_NAME);
     private final TalonFX leftFollower = new TalonFX(LEFT_FOLLOWER_TALONFX, CAN_BUS_NAME);
