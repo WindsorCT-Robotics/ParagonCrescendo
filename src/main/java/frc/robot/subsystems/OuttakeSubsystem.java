@@ -44,12 +44,19 @@ public class OuttakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Outtake Beam Breaker ", beamBreaker.get());
-        adjustDistance = SmartDashboard.getNumber("Outtake Adjust Distance (inches)", adjustDistance);
-        adjustRotations = new Rotations(adjustDistance / (MOTOR_GEAR_RATIO * ROLLERS_CIRCUMFERENCE));
-
-        adjustDirection = (int) SmartDashboard.getNumber("Outtake Adjust Direction", adjustDirection);
-        adjustSpeed = new Percent(SmartDashboard.getNumber("Outtake Adjust Speed (percentage)", adjustSpeed.asDouble()));
-        adjustVelocity = new Percent(adjustDirection * adjustSpeed.asDouble());
+        double tempAdjustDistance = SmartDashboard.getNumber("Outtake Adjust Distance (inches)", adjustDistance);
+        if (adjustDistance != tempAdjustDistance) {
+            adjustDistance = tempAdjustDistance;
+            adjustRotations = new Rotations(adjustDistance / (MOTOR_GEAR_RATIO * ROLLERS_CIRCUMFERENCE));
+        }
+        
+        int tempAdjustDirection = (int) SmartDashboard.getNumber("Outtake Adjust Direction", adjustDirection);
+        double tempAdjustSpeed = SmartDashboard.getNumber("Outtake Adjust Speed (percentage)", adjustSpeed.asDouble());
+        if (adjustDirection != tempAdjustDirection || adjustSpeed.asDouble() != tempAdjustSpeed) {
+            adjustDirection = tempAdjustDirection;
+            adjustSpeed = new Percent(tempAdjustSpeed);
+            adjustVelocity = new Percent(adjustDirection * adjustSpeed.asDouble());
+        }
     }
 
     public void moveRollers(Percent speed) {
