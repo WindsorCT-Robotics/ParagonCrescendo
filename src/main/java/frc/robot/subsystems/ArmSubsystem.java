@@ -36,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor = new CANSparkMax(Arm.MOTOR_CANID, MotorType.kBrushless);
         armEncoder = armMotor.getEncoder();
         armState = ArmState.UNKNOWN;
-        armHomeLimit = new DigitalInput(Arm.ARM_HOME_LIMIT);
+        armHomeLimit = new DigitalInput(Arm.ARM_HOME_LIMIT_PIN);
     }
     
     private boolean isAtLimit() {

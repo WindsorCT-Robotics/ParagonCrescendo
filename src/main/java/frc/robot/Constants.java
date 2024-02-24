@@ -12,8 +12,8 @@ public class Constants {
 
     public static final class Arm {
         public static final int MOTOR_CANID = 6;
-        public static final int ARM_HOME_LIMIT = 3;
-        public static final int ARM_EXTEND_LIMIT = 4;
+        public static final int ARM_HOME_LIMIT_PIN = 3;
+        public static final int ARM_EXTEND_LIMIT_PIN = 4;
 
         public static final double ROTATION_SCALE = (25) * ((double) 44 / 18) * ((double) 44 / 18);
         public static final double ROTATION_VELOCITY = 0.8;
