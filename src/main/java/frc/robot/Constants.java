@@ -4,16 +4,6 @@ public class Constants {
     public static final int INTAKE_ROLLER_MOTOR_CANID = 5;
     public static final int INTAKE_BEAM_BREAKER_PIN = 0;    
 
-    public static final class Arm {
-        public static final int MOTOR_CANID = 6;
-        public static final int ARM_HOME_LIMIT_PIN = 3;
-        public static final int ARM_EXTEND_LIMIT_PIN = 4;
-
-        public static final double ROTATION_SCALE = (25) * ((double) 44 / 18) * ((double) 44 / 18);
-        public static final double ROTATION_VELOCITY = 0.8;
-        public static final double ROTATION_CAP = ROTATION_SCALE * 1 / 3;
-    }
-
     public static final int OUTTAKE_ROLLER_MOTOR_CANID = 7;
     public static final int OUTTAKE_BEAM_BREAKER_PIN = 1;
 
