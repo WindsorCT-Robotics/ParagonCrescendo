@@ -8,31 +8,22 @@ public class Constants {
     public static final int RIGHT_FOLLOWER_TALONFX = 4;
 
     public static final int INTAKE_ROLLER_MOTOR_CANID = 5;
-    public static final int INTAKE_BEAMBREAKER = 0;    
+    public static final int INTAKE_BEAM_BREAKER_PIN = 0;    
 
     public static final class Arm {
         public static final int MOTOR_CANID = 6;
+        public static final int ARM_HOME_LIMIT_PIN = 3;
+        public static final int ARM_EXTEND_LIMIT_PIN = 4;
 
-        public static final double PID_kP = 0.0;
-        public static final double ROTATION_VELOCITY_CAP = 1;
-        public static final double ROTATION_ACCELERATION_CAP = 1;
-
-        public static final double ROTATION_kG = 0.54;
-        public static final double ROTATION_kS = 0;
-        public static final double ROTATION_kV = 1.46;
-        public static final double ROTATION_kA = 0.03;
-
-        public static final double ROTATION_SCALE = (25) * (44 / 18) * (44 / 18);
+        public static final double ROTATION_SCALE = (25) * ((double) 44 / 18) * ((double) 44 / 18);
         public static final double ROTATION_VELOCITY = 0.8;
-
-        public static final double ROTATION_OFFSET = -1 * 35 * Math.PI / 180 * ROTATION_SCALE; // Offset down
-        public static final double ROTATION_CAP = 2 * Math.PI / 3 * ROTATION_SCALE;
+        public static final double ROTATION_CAP = ROTATION_SCALE * 1 / 3;
     }
 
     public static final int OUTTAKE_ROLLER_MOTOR_CANID = 7;
     public static final int OUTTAKE_BEAM_BREAKER_PIN = 1;
 
-    public static final int INTAKE_ROLLERS_TARGET_RPM = 200;
+    public static final int INTAKE_ROLLERS_TARGET_RPM = 500;
     public static final int INTAKE_MOTOR_MAX_RPM = 5600;
     public static final double INTAKE_MOTOR_GEAR_RATIO = (double) 14 / 48;
     public static final double INTAKE_MOTOR_TARGET_PERCENT = INTAKE_ROLLERS_TARGET_RPM / (INTAKE_MOTOR_MAX_RPM * INTAKE_MOTOR_GEAR_RATIO);
@@ -41,10 +32,10 @@ public class Constants {
     public static final double OUTTAKE_MOTOR_GEAR_RATIO = (double) 1 / 16;
     public static final double OUTTAKE_MOTOR_TARGET_PERCENT = INTAKE_ROLLERS_TARGET_RPM / (OUTTAKE_MOTOR_MAX_RPM * OUTTAKE_MOTOR_GEAR_RATIO);
 
-    public static final double OUTTAKE_ADJUST_DISTANCE = 0; // Inches
+    public static final double OUTTAKE_ADJUST_DISTANCE = 2.5; // Inches
     public static final int OUTTAKE_ADJUST_DIRECTION = -1; // Too far is -1, not far enough is 1.
     public static final double OUTTAKE_ROLLERS_CIRCUMFERENCE = Math.PI * 1.67; // Outer diameter is 1.67"
-    public static final double OUTTAKE_ADJUST_ROTATIONS = OUTTAKE_ADJUST_DISTANCE * OUTTAKE_MOTOR_GEAR_RATIO / OUTTAKE_ROLLERS_CIRCUMFERENCE;
-    public static final double OUTTAKE_ADJUST_SPEED = OUTTAKE_ADJUST_DIRECTION * 0.03;
+    public static final double OUTTAKE_ADJUST_ROTATIONS = OUTTAKE_ADJUST_DISTANCE / (OUTTAKE_MOTOR_GEAR_RATIO * OUTTAKE_ROLLERS_CIRCUMFERENCE);
+    public static final double OUTTAKE_ADJUST_SPEED = OUTTAKE_ADJUST_DIRECTION * 0.2;
 }
 

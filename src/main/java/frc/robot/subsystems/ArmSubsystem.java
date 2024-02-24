@@ -1,54 +1,128 @@
 package frc.robot.subsystems;
 import static frc.robot.Constants.*;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import frc.robot.Units.Radians;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.Units.Percent;
 import frc.robot.Units.Rotations;
+import frc.robot.Exceptions.ArmMovementException;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-
-public class ArmSubsystem extends ProfiledPIDSubsystem {
+public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax armMotor;
-    private final ArmFeedforward armController;
     private final RelativeEncoder armEncoder;
+    private final DigitalInput armHomeLimit;
+
+    private static final double ROTATION_SCALE = 25 * Math.pow((44d/18d), 2); // TODO: Ask Mr.G to break down this formula and eliminate all magic numbers
+    private static final Rotations ROTATION_CAP = new Rotations(ROTATION_SCALE / 2.6d);
+    private static final Percent ARM_ROTATION_POWER = new Percent(0.8d);    
+
+    public enum ArmState {
+        UNKNOWN,
+        HOMING,
+        RETRACTED,
+        EXTENDED,
+        RETRACTING,
+        EXTENDING
+    }
+
+    private ArmState armState;
 
     public ArmSubsystem() {
-        super(new ProfiledPIDController(Arm.PID_kP, 0, 0, new TrapezoidProfile.Constraints(Arm.ROTATION_VELOCITY_CAP, Arm.ROTATION_ACCELERATION_CAP)), 0);
         armMotor = new CANSparkMax(Arm.MOTOR_CANID, MotorType.kBrushless);
-        armController = new ArmFeedforward(Arm.ROTATION_kS, Arm.ROTATION_kG, Arm.ROTATION_kV, Arm.ROTATION_kA);
         armEncoder = armMotor.getEncoder();
-        armEncoder.setPosition(0);
-        setGoal(new Radians(Arm.ROTATION_OFFSET));
+        armState = ArmState.UNKNOWN;
+        armHomeLimit = new DigitalInput(Arm.ARM_HOME_LIMIT_PIN);
+    }
+    
+    private boolean isAtLimit() {
+        return !armHomeLimit.get();
     }
 
     @Override
     public void periodic() {
+        switch (armState) {
+            case UNKNOWN:
+            case EXTENDED:
+            case RETRACTED:
+                break;
 
+            case EXTENDING:
+                if (armEncoder.getPosition() >= ROTATION_CAP.asDouble()) {
+                    armMotor.stopMotor();
+                    armState = ArmState.EXTENDED;
+                }
+                break;
+
+            case HOMING:
+            case RETRACTING:
+                if (isAtLimit()) {
+                    armMotor.stopMotor();
+                    if (armState == ArmState.HOMING) {
+                        armEncoder.setPosition(0);
+                    }
+                    armState = ArmState.RETRACTED;
+                }
+                break;
+        }
+
+        SmartDashboard.putBoolean("Home Position Switch", isAtLimit());
+        SmartDashboard.putNumber("Max Travel Distance", ROTATION_CAP.asDouble());
+        SmartDashboard.putNumber("Current Travel Distance", armEncoder.getPosition());
+        SmartDashboard.putString("Arm State", armState.toString());
     }
 
-    public void setGoal(Radians radians) { setGoal(radians.asDouble()); }
-
-    public void useOutput(double output, TrapezoidProfile.State setpoint) {
-        double feedforward = armController.calculate(setpoint.position, setpoint.velocity);
-
-        armMotor.setVoltage(output + feedforward);
+    public ArmState getArmState() {
+        return armState;
     }
 
-    public Radians getRotationsInRadians() { 
-        return new Radians(new Rotations(armEncoder.getPosition()), Arm.ROTATION_OFFSET);
+    public void home () {
+        armMotor.set(-ARM_ROTATION_POWER.asDouble());
+        armState = ArmState.HOMING;
+    }
+    
+    public void extend() throws ArmMovementException {
+        switch(armState) {
+            case UNKNOWN:
+            case HOMING:
+                throw new ArmMovementException(armState, ArmState.EXTENDING);
+
+            case EXTENDING:
+            case EXTENDED:
+            break;
+
+            case RETRACTING:
+            case RETRACTED:
+                armMotor.set(ARM_ROTATION_POWER.asDouble());
+                armState = ArmState.EXTENDING;
+            break;
+        }
     }
 
-    public double getMeasurement() {
-        return getRotationsInRadians().asDouble();
+    public void retract() throws ArmMovementException {
+        switch(armState) {
+            case UNKNOWN:
+            case HOMING:
+                throw new ArmMovementException(armState, ArmState.RETRACTING);
+
+            case EXTENDING:
+            case EXTENDED:
+                armMotor.set(-ARM_ROTATION_POWER.asDouble());
+                armState = ArmState.RETRACTING;
+            break;
+
+            case RETRACTING:
+            case RETRACTED:
+            break;
+        }
     }
 
-    public void stop() {
+    public void cancel() {
        armMotor.stopMotor();
+       armState = ArmState.UNKNOWN;
     }
 }                                                 

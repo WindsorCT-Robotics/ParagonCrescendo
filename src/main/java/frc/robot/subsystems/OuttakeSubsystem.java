@@ -6,6 +6,7 @@ import frc.robot.Units.Percent;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,6 +19,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
     public OuttakeSubsystem() {
         rollerMotor = new CANSparkMax(OUTTAKE_ROLLER_MOTOR_CANID, MotorType.kBrushless);
+        rollerMotor.setIdleMode(IdleMode.kBrake);
         beamBreaker = new DigitalInput(OUTTAKE_BEAM_BREAKER_PIN);
         rollerEncoder = rollerMotor.getEncoder();
     }
@@ -31,9 +33,6 @@ public class OuttakeSubsystem extends SubsystemBase {
         rollerMotor.set(speed.asDouble());
     }
 
-    /* BeamBreaker is true when beam is unbroken (open)
-     * BeamBreaker is false when beam is broken (closed)
-     */
     public boolean isBeamBroken() {
         return !beamBreaker.get();
     }
@@ -49,4 +48,4 @@ public class OuttakeSubsystem extends SubsystemBase {
     public void stop() {
        rollerMotor.stopMotor();
     }
-}                                                 
+}

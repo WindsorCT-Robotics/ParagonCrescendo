@@ -14,4 +14,8 @@ public class Radians {
     public double asDouble() {
         return radians;
     }
+
+    public Rotations asRotations() {
+        return new Rotations(radians / (2 * Math.PI));
+    }
 }
