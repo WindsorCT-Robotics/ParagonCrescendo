@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OuttakeSubsystem extends SubsystemBase {
     private CANSparkMax rollerMotor;
+    private static final int ROLLER_MOTOR_CANID = 7;
+    private static final int BEAM_BREAKER_PIN = 1;
+
     private final DigitalInput beamBreaker;
     private RelativeEncoder rollerEncoder;
 
