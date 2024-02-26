@@ -100,6 +100,12 @@ public class DriveSubsystem extends SubsystemBase {
         cfg.setPosition(0);
     }
 
+    public void currentLimitToggleTalonFX(TalonFXConfigurator cfg, boolean shouldCurrentLimitEnable) {
+        TalonFXConfiguration toApply = new TalonFXConfiguration();
+        toApply.CurrentLimits.StatorCurrentLimitEnable = shouldCurrentLimitEnable;
+        cfg.apply(toApply);
+    }
+
     public void drive(double speed, double turn) {
         drive.curvatureDrive(speed, turn, true);
     }
@@ -108,6 +114,13 @@ public class DriveSubsystem extends SubsystemBase {
         return
             rotations.asMeters(gearRatio, wheelCircumference)
                      .asDouble();
+    }
+
+    public void setCurrentLimit(boolean shouldCurrentLimitEnable) {
+        currentLimitToggleTalonFX(leftMain.getConfigurator(), shouldCurrentLimitEnable);
+        currentLimitToggleTalonFX(leftFollower.getConfigurator(), shouldCurrentLimitEnable);
+        currentLimitToggleTalonFX(rightMain.getConfigurator(), shouldCurrentLimitEnable);
+        currentLimitToggleTalonFX(rightFollower.getConfigurator(), shouldCurrentLimitEnable);
     }
     
     public void stop() {
