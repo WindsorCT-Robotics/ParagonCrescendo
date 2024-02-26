@@ -86,6 +86,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // Override drive motor current limits temporarily
+    driveController.leftStick().whileTrue(new CurrentLimitOverrideCommand(drive));
+
     // Intake note from ground
     driveController.leftBumper().onTrue(new IntakeNoteCommand(intake, outtake));
 
