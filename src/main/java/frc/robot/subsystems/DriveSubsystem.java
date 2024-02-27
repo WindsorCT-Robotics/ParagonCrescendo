@@ -39,10 +39,10 @@ public class DriveSubsystem extends SubsystemBase {
     private DifferentialDrive drive;
 
     public DriveSubsystem() {
-        initializeTalonFX(leftMain.getConfigurator(), "left");
-        initializeTalonFX(leftFollower.getConfigurator(), "left");
-        initializeTalonFX(rightMain.getConfigurator(), "right");
-        initializeTalonFX(rightFollower.getConfigurator(), "right");
+        initializeTalonFX(leftMain.getConfigurator(), "left", true);
+        initializeTalonFX(leftFollower.getConfigurator(), "left", true);
+        initializeTalonFX(rightMain.getConfigurator(), "right", true);
+        initializeTalonFX(rightFollower.getConfigurator(), "right", true);
 
         leftFollower.setControl(new Follower(leftMain.getDeviceID(), false));
         rightFollower.setControl(new Follower(rightMain.getDeviceID(), false));
@@ -80,7 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Coast Mode Enabled", isCoastMode);
     }
 
-    private void initializeTalonFX(TalonFXConfigurator cfg, String side) {
+    private void initializeTalonFX(TalonFXConfigurator cfg, String side, boolean currentLimit) {
         TalonFXConfiguration toApply = new TalonFXConfiguration();
 
         if (side.equals("left")) {
@@ -94,16 +94,10 @@ public class DriveSubsystem extends SubsystemBase {
         } else {
             toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         }
-        toApply.CurrentLimits.StatorCurrentLimitEnable = true;
+        toApply.CurrentLimits.StatorCurrentLimitEnable = currentLimit;
         toApply.CurrentLimits.StatorCurrentLimit = 90;
         cfg.apply(toApply);
         cfg.setPosition(0);
-    }
-
-    public void currentLimitToggleTalonFX(TalonFXConfigurator cfg, boolean shouldCurrentLimitEnable) {
-        TalonFXConfiguration toApply = new TalonFXConfiguration();
-        toApply.CurrentLimits.StatorCurrentLimitEnable = shouldCurrentLimitEnable;
-        cfg.apply(toApply);
     }
 
     public void drive(double speed, double turn) {
@@ -117,10 +111,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setCurrentLimit(boolean shouldCurrentLimitEnable) {
-        currentLimitToggleTalonFX(leftMain.getConfigurator(), shouldCurrentLimitEnable);
-        currentLimitToggleTalonFX(leftFollower.getConfigurator(), shouldCurrentLimitEnable);
-        currentLimitToggleTalonFX(rightMain.getConfigurator(), shouldCurrentLimitEnable);
-        currentLimitToggleTalonFX(rightFollower.getConfigurator(), shouldCurrentLimitEnable);
+        initializeTalonFX(leftMain.getConfigurator(), "left", shouldCurrentLimitEnable);
+        initializeTalonFX(leftFollower.getConfigurator(), "left",shouldCurrentLimitEnable);
+        initializeTalonFX(rightMain.getConfigurator(), "right",shouldCurrentLimitEnable);
+        initializeTalonFX(rightFollower.getConfigurator(), "right",shouldCurrentLimitEnable);
     }
     
     public void stop() {

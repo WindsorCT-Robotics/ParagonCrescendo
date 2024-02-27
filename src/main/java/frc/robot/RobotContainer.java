@@ -90,7 +90,7 @@ public class RobotContainer {
     driveController.leftStick().whileTrue(new CurrentLimitOverrideCommand(drive));
 
     // Intake note from ground
-    driveController.leftBumper().onTrue(new IntakeNoteCommand(intake, outtake));
+    driveController.leftBumper().onTrue(new IntakeNoteCommand(intake, outtake).until(operatorController.b()));
 
     // Amp Score with arm moving
     driveController.rightBumper().onTrue(new AmpScoreCommand(arm, outtake));
