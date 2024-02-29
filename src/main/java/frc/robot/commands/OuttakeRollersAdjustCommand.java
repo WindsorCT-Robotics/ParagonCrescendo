@@ -1,13 +1,11 @@
 package frc.robot.commands;
-import static frc.robot.Constants.OUTTAKE_ADJUST_ROTATIONS;
-import static frc.robot.Constants.OUTTAKE_ADJUST_SPEED;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Units.Percent;
 import frc.robot.subsystems.OuttakeSubsystem;
 
 public class OuttakeRollersAdjustCommand extends Command {
     private final OuttakeSubsystem outtake;
+    private double startingEncoderPosition;
 
     public OuttakeRollersAdjustCommand(OuttakeSubsystem outtake) {
         this.outtake = outtake;
@@ -15,12 +13,14 @@ public class OuttakeRollersAdjustCommand extends Command {
 
     @Override
     public void initialize() {
-        outtake.resetRollerEncoder();
+        startingEncoderPosition = outtake.getRollerPosition();
+        System.out.println(startingEncoderPosition);
     }
 
     @Override
     public void execute() {
-        outtake.moveRollers(new Percent(OUTTAKE_ADJUST_SPEED));
+        outtake.adjustRollers();
+        System.out.println(outtake.getRollerPosition());
     }
 
     @Override
@@ -30,6 +30,6 @@ public class OuttakeRollersAdjustCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(outtake.getRollerPosition()) >= OUTTAKE_ADJUST_ROTATIONS;
+        return Math.abs(Math.abs(outtake.getRollerPosition()) - Math.abs(startingEncoderPosition)) >= outtake.getAdjustRotations().asDouble();
     }
 }

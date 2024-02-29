@@ -1,16 +1,18 @@
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.OuttakeSubsystem;
 
-public class OuttakeRollersIntakeBeamCommand extends Command {
-    private final OuttakeSubsystem outtake;
+import frc.robot.Units.Percent;
+
+import java.util.function.DoubleSupplier;
+
+public class IntakeRollersManualCommand extends Command{
     private final IntakeSubsystem intake;
+    private DoubleSupplier speed;
 
-    public OuttakeRollersIntakeBeamCommand(OuttakeSubsystem outtake, IntakeSubsystem intake) {
-        this.outtake = outtake;
+    public IntakeRollersManualCommand(IntakeSubsystem intake, DoubleSupplier speed) {
         this.intake = intake;
+        this.speed = speed;
     }
 
     @Override
@@ -20,16 +22,16 @@ public class OuttakeRollersIntakeBeamCommand extends Command {
 
     @Override
     public void execute() {
-        outtake.outtakeRollers();
+        intake.moveRollers(new Percent(speed.getAsDouble() / 4));
     }
 
     @Override
     public void end(boolean interrupted) {
-        outtake.stop();
+        intake.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return !intake.isBeamBroken();
+        return false;
     }
 }
