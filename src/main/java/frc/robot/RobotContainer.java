@@ -86,9 +86,6 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Override drive motor current limits temporarily
-    driveController.leftStick().whileTrue(new CurrentLimitOverrideCommand(drive));
-
     // Intake note from ground
     driveController.leftBumper().onTrue(new IntakeNoteCommand(intake, outtake).until(operatorController.b()));
 
@@ -106,9 +103,6 @@ public class RobotContainer {
     // Manually control outtake rollers
     Trigger opRightJoy = new Trigger(() -> Math.abs(operatorController.getRightY()) > 0.2);
     opRightJoy.whileTrue(new OuttakeRollersManualCommand(outtake, () -> -operatorController.getRightY()));
-
-    // Manually stop intake and outtake rollers
-    operatorController.b().onTrue(new StopRollersCommand(outtake, intake));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

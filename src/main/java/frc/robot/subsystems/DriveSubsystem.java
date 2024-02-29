@@ -39,10 +39,10 @@ public class DriveSubsystem extends SubsystemBase {
     private DifferentialDrive drive;
 
     public DriveSubsystem() {
-        initializeTalonFX(leftMain.getConfigurator(), "left", true);
-        initializeTalonFX(leftFollower.getConfigurator(), "left", true);
-        initializeTalonFX(rightMain.getConfigurator(), "right", true);
-        initializeTalonFX(rightFollower.getConfigurator(), "right", true);
+        initializeTalonFX(leftMain.getConfigurator(), "left");
+        initializeTalonFX(leftFollower.getConfigurator(), "left");
+        initializeTalonFX(rightMain.getConfigurator(), "right");
+        initializeTalonFX(rightFollower.getConfigurator(), "right");
 
         leftFollower.setControl(new Follower(leftMain.getDeviceID(), false));
         rightFollower.setControl(new Follower(rightMain.getDeviceID(), false));
@@ -80,7 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Coast Mode Enabled", isCoastMode);
     }
 
-    private void initializeTalonFX(TalonFXConfigurator cfg, String side, boolean currentLimit) {
+    private void initializeTalonFX(TalonFXConfigurator cfg, String side) {
         TalonFXConfiguration toApply = new TalonFXConfiguration();
 
         if (side.equals("left")) {
@@ -94,7 +94,7 @@ public class DriveSubsystem extends SubsystemBase {
         } else {
             toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         }
-        toApply.CurrentLimits.StatorCurrentLimitEnable = currentLimit;
+        toApply.CurrentLimits.StatorCurrentLimitEnable = true;
         toApply.CurrentLimits.StatorCurrentLimit = 90;
         cfg.apply(toApply);
         cfg.setPosition(0);
@@ -110,13 +110,6 @@ public class DriveSubsystem extends SubsystemBase {
                      .asDouble();
     }
 
-    public void setCurrentLimit(boolean shouldCurrentLimitEnable) {
-        initializeTalonFX(leftMain.getConfigurator(), "left", shouldCurrentLimitEnable);
-        initializeTalonFX(leftFollower.getConfigurator(), "left",shouldCurrentLimitEnable);
-        initializeTalonFX(rightMain.getConfigurator(), "right",shouldCurrentLimitEnable);
-        initializeTalonFX(rightFollower.getConfigurator(), "right",shouldCurrentLimitEnable);
-    }
-    
     public void stop() {
         leftMain.set(0);
         rightMain.set(0);
