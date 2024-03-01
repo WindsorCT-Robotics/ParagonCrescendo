@@ -15,7 +15,7 @@ public class DriveCommand extends Command {
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(positiveSpeedRateLimit, negativeSpeedRateLimit, 0);
     
     private final DoubleSupplier turn;
-    private double turnScale = .200;
+    private double turnScale = .300;
     private double positiveTurnRateLimit = 10.0;
     private double negativeTurnRateLimit = -10.0;
     private SlewRateLimiter turnLimiter = new SlewRateLimiter(positiveTurnRateLimit, negativeTurnRateLimit, 0);

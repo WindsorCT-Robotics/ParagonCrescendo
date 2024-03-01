@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -107,7 +106,7 @@ public class RobotContainer {
     opRightJoy.whileTrue(new OuttakeRollersManualCommand(outtake, () -> -operatorController.getRightY()));
 
     // Feed ring out the intake
-    operatorController.a().whileTrue(new ParallelCommandGroup(new IntakeRollersManualCommand(intake, () -> 1), new OuttakeRollersManualCommand(outtake, () -> 1)));
+    operatorController.a().whileTrue(new ParallelCommandGroup(new IntakeRollersManualCommand(intake, () -> -1), new OuttakeRollersManualCommand(outtake, () -> -1)));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
