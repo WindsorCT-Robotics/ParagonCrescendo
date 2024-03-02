@@ -13,6 +13,7 @@
 package frc.robot;
 
 import frc.robot.commands.*;
+import frc.robot.commands.autos.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -51,8 +52,8 @@ public class RobotContainer {
   * The container for the robot.  Contains subsystems, OI devices, and commands.
   */
   private RobotContainer() {
-    SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
-    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());
+    m_chooser.setDefaultOption("Drive Forward Auto Command", new DriveForwardAutoCommand(drive));
+    m_chooser.addOption("Wait Drive Forward Auto Command", new WaitDriveForwardAutoCommand(drive));
     SmartDashboard.putData("Auto Mode", m_chooser);
 
     drive = new DriveSubsystem();
