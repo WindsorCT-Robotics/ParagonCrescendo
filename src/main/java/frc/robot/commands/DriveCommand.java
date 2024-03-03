@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCommand extends Command {
     private final DoubleSupplier speed;
-    private double speedScale = .80;
+    private double speedScale = .825;
     private double positiveSpeedRateLimit = 5.0;
     private double negativeSpeedRateLimit = -5.0;
     private SlewRateLimiter speedLimiter = new SlewRateLimiter(positiveSpeedRateLimit, negativeSpeedRateLimit, 0);
     
     private final DoubleSupplier turn;
-    private double turnScale = .300;
+    private double turnScale = .275;
     private double positiveTurnRateLimit = 10.0;
     private double negativeTurnRateLimit = -10.0;
     private SlewRateLimiter turnLimiter = new SlewRateLimiter(positiveTurnRateLimit, negativeTurnRateLimit, 0);

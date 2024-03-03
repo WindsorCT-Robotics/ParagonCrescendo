@@ -6,11 +6,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class WaitDriveForwardAutoCommand extends SequentialCommandGroup {
+    private final DriveSubsystem drive;
+
     public WaitDriveForwardAutoCommand(DriveSubsystem drive) {
-        addRequirements(drive);
+        this.drive = drive;
+        addRequirements(this.drive);
         addCommands(
             new WaitCommand(8),
-            new DriveCommand(() -> 0.35, () -> 0, drive).withTimeout(3)
+            new DriveCommand(() -> 0.35, () -> 0, drive).withTimeout(4)
         );
     }
 }
