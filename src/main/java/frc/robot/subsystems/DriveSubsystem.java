@@ -45,10 +45,10 @@ public class DriveSubsystem extends SubsystemBase {
     private final Radians wheelCircumference = new Radians(Math.PI * wheelDiameter.asDouble());
 
     // Feedforward/Feedback Gains
-    public static final double ksVolts = 0.068148;
-    public static final double kvVoltSecondsPerMeter = 2.0192;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.43397;
-    public static final double kPDriveVel = 0.20483;
+    public static final double ksVolts = 0.64469;
+    public static final double kvVoltSecondsPerMeter = 1.6453;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.14978;
+    public static final double kPDriveVel = 0.0000045795;
 
     // Differential Drive Kinematics
     public static final double kTrackwidthMeters = 0.5588;
@@ -56,8 +56,8 @@ public class DriveSubsystem extends SubsystemBase {
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
     // Max Trajector Velocity and Acceleration
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+    public static final double kMaxSpeedMetersPerSecond = 2;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
 
     // Ramsete Parameters
     public static final double kRamseteB = 2;

@@ -46,26 +46,27 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
             10);
 
         // Create config for trajectory
-        TrajectoryConfig config =
+        TrajectoryConfig initialConfig =
             new TrajectoryConfig(
                     DriveSubsystem.kMaxSpeedMetersPerSecond,
                     DriveSubsystem.kMaxAccelerationMetersPerSecondSquared)
                 // Add kinematics to ensure max speed is actually obeyed
                 .setKinematics(DriveSubsystem.kDriveKinematics)
                 // Apply the voltage constraint
-                .addConstraint(autoVoltageConstraint);
+                .addConstraint(autoVoltageConstraint)
+                .setReversed(true);
 
         // An example trajectory to follow. All units in meters.
         Trajectory initialDriveTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(0)),
+                new Pose2d(0, 0, new Rotation2d(Math.PI)),
                 // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(-0.254, 0)),
+                List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(-0.508, -0.451, new Rotation2d(Math.PI/2)),
+                new Pose2d(1.23, 0.6, new Rotation2d(282*Math.PI/180)), //-0.508, -0.451
                 // Pass config
-                config);
+                initialConfig);
 
         RamseteCommand initialDriveCommand =
             new RamseteCommand(
@@ -84,16 +85,26 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 drive::tankDriveVolts,
                 drive);
 
+        // Create config for trajectory
+        TrajectoryConfig intakeConfig =
+            new TrajectoryConfig(
+                    DriveSubsystem.kMaxSpeedMetersPerSecond,
+                    DriveSubsystem.kMaxAccelerationMetersPerSecondSquared)
+                // Add kinematics to ensure max speed is actually obeyed
+                .setKinematics(DriveSubsystem.kDriveKinematics)
+                // Apply the voltage constraint
+                .addConstraint(autoVoltageConstraint);
+
         Trajectory intakeDriveTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(90)),
+                new Pose2d(0, 0, new Rotation2d(282*Math.PI/180)),
                 // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(-0.254, 0.315)),
+                List.of(new Translation2d(1,0),new Translation2d(2, 0.2),new Translation2d(4, 0.25)),//-0.254, 0.315
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(-7.366, 0.315, new Rotation2d(Math.PI)),
+                new Pose2d(6 ,0.9, new Rotation2d(0*Math.PI/180)), //-7.366, 0.315
                 // Pass config
-                config);
+                intakeConfig);
 
         RamseteCommand intakeDriveCommand =
             new RamseteCommand(
