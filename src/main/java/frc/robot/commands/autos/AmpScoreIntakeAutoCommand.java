@@ -1,6 +1,7 @@
 package frc.robot.commands.autos;
 
 import java.util.List;
+import java.util.Optional;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -29,12 +31,30 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
     OuttakeSubsystem outtake;
     IntakeSubsystem intake;
 
-    public AmpScoreIntakeAutoCommand(DriveSubsystem drive, ArmSubsystem arm, OuttakeSubsystem outtake, IntakeSubsystem intake) {
+    public enum AllianceColor {
+        BLUE,
+        RED
+    }
+
+    AllianceColor color;
+
+    public AmpScoreIntakeAutoCommand(DriveSubsystem drive, ArmSubsystem arm, OuttakeSubsystem outtake, IntakeSubsystem intake, Optional<Alliance> alliance) {
         addRequirements(drive);
         this.drive = drive;
         this.arm = arm;
         this.outtake = outtake;
         this.intake = intake;
+
+        if (alliance.isPresent()) {
+            if(alliance.get() == Alliance.Blue) {
+                color = AllianceColor.BLUE;
+            } else {
+                color = AllianceColor.RED;
+            }
+        } else {
+            color = AllianceColor.BLUE;
+        }
+
 
         var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -57,16 +77,30 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 .setReversed(true);
 
         // An example trajectory to follow. All units in meters.
-        Trajectory initialDriveTrajectory =
+        Trajectory initialDriveTrajectory;
+        if (color == AllianceColor.BLUE) {
+            initialDriveTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, new Rotation2d(Math.PI)),
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.23, 0.6, new Rotation2d(282*Math.PI/180)), //-0.508, -0.451
+                new Pose2d(1.23, 0.5, new Rotation2d(282*Math.PI/180)), //-0.508, -0.451
                 // Pass config
                 initialConfig);
+        } else {
+            initialDriveTrajectory =
+            TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(Math.PI)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(1.23, -0.5, new Rotation2d(78*Math.PI/180)), //-0.508, -0.451
+                // Pass config
+                initialConfig);
+        }
 
         RamseteCommand initialDriveCommand =
             new RamseteCommand(
@@ -95,7 +129,9 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 // Apply the voltage constraint
                 .addConstraint(autoVoltageConstraint);
 
-        Trajectory intakeDriveTrajectory =
+        Trajectory intakeDriveTrajectory;
+        if (color == AllianceColor.BLUE) {
+            intakeDriveTrajectory = 
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, new Rotation2d(282*Math.PI/180)),
@@ -105,6 +141,18 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 new Pose2d(6 ,0.9, new Rotation2d(0*Math.PI/180)), //-7.366, 0.315
                 // Pass config
                 intakeConfig);
+        } else {
+            intakeDriveTrajectory = 
+            TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(78*Math.PI/180)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(new Translation2d(1,0),new Translation2d(2, -0.2),new Translation2d(4, -0.25)),//-0.254, 0.315
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(6 ,-0.9, new Rotation2d(0*Math.PI/180)), //-7.366, 0.315
+                // Pass config
+                intakeConfig);
+        }
 
         RamseteCommand intakeDriveCommand =
             new RamseteCommand(

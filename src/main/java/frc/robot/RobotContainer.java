@@ -15,7 +15,7 @@ package frc.robot;
 import frc.robot.commands.*;
 import frc.robot.commands.autos.*;
 import frc.robot.subsystems.*;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -61,13 +61,12 @@ public class RobotContainer {
 
     intake = new IntakeSubsystem();
     arm = new ArmSubsystem();
-    outtake = new OuttakeSubsystem();
-
+    outtake = new OuttakeSubsystem(); 
     m_chooser.setDefaultOption("Drive Forward Auto Command", new DriveForwardAutoCommand(drive));
     m_chooser.addOption("Wait Drive Forward Auto Command", new WaitDriveForwardAutoCommand(drive));
     m_chooser.addOption("Do Nothing Auto Command", new DoNothingAutoCommand());
-    m_chooser.addOption("Amp Score Auto Command", new AmpScoreAutoCommand(drive, arm, outtake));
-    m_chooser.addOption("Amp Score and Intake Auto Command", new AmpScoreIntakeAutoCommand(drive, arm, outtake, intake));
+    m_chooser.addOption("Amp Score Auto Command", new AmpScoreAutoCommand(drive, arm, outtake, DriverStation.getAlliance()));
+    m_chooser.addOption("Amp Score and Intake Auto Command", new AmpScoreIntakeAutoCommand(drive, arm, outtake, intake, DriverStation.getAlliance()));
     SmartDashboard.putData("Auto Mode", m_chooser);
 
     configureButtonBindings();
