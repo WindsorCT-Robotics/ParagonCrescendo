@@ -117,13 +117,13 @@ public class RobotContainer {
     //Elevator Controls
     operatorController.rightTrigger(0.1)
         .whileTrue(new ParallelCommandGroup(
-              new LeftUpElevatorCommand(elevator, () -> operatorController.getRightTriggerAxis()),
-              new RightUpElevatorCommand(elevator, () -> operatorController.getRightTriggerAxis())));
+              new RightUpElevatorCommand(elevator, () -> operatorController.getRightTriggerAxis()),
+              new LeftUpElevatorCommand(elevator, () -> operatorController.getRightTriggerAxis())));
 
     operatorController.leftTrigger(0.1)
       .whileTrue(new ParallelCommandGroup(
-            new LeftDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis()),
-            new RightDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis())));
+            new RightDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis()),
+            new LeftDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis())));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

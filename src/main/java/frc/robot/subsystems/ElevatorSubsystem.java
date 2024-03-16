@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ElevatorSubsystem extends SubsystemBase {
     private static final int LEFT_MOTOR_CANID = 8;
     private static final int RIGHT_MOTOR_CANID = 9;
-    private static final int RIGHT_UPPER_LIMIT_PIN = 4;
+    private static final int RIGHT_UPPER_LIMIT_PIN = 6;
     private static final int LEFT_UPPER_LIMIT_PIN = 5;
-    private static final int RIGHT_LOWER_LIMIT_PIN = 6;
-    private static final int LEFT_LOWER_LIMIT_PIN = 7;
+    private static final int RIGHT_LOWER_LIMIT_PIN = 7;
+    private static final int LEFT_LOWER_LIMIT_PIN = 4;
 
     private final CANSparkMax leftElev;
     private final CANSparkMax rightElev;
