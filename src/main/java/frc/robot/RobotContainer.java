@@ -16,7 +16,7 @@ import frc.robot.commands.*;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.elevator.*;
 import frc.robot.subsystems.*;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -65,10 +65,12 @@ public class RobotContainer {
     arm = new ArmSubsystem();
     outtake = new OuttakeSubsystem();
     elevator = new ElevatorSubsystem();
-
+    
     m_chooser.setDefaultOption("Drive Forward Auto Command", new DriveForwardAutoCommand(drive));
     m_chooser.addOption("Wait Drive Forward Auto Command", new WaitDriveForwardAutoCommand(drive));
     m_chooser.addOption("Do Nothing Auto Command", new DoNothingAutoCommand());
+    m_chooser.addOption("Amp Score Auto Command", new AmpScoreAutoCommand(drive, arm, outtake, DriverStation.getAlliance()));
+    m_chooser.addOption("Amp Score and Intake Auto Command", new AmpScoreIntakeAutoCommand(drive, arm, outtake, intake, DriverStation.getAlliance()));
     SmartDashboard.putData("Auto Mode", m_chooser);
 
     configureButtonBindings();
@@ -98,7 +100,7 @@ public class RobotContainer {
 
     // Amp Score with arm moving
     driveController.rightBumper().onTrue(new AmpScoreCommand(arm, outtake));
-    
+
     // Move arm up and down
     operatorController.povUp().onTrue(new ExtendArmCommand(arm));
     operatorController.povDown().onTrue(new RetractArmCommand(arm));
@@ -131,10 +133,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
   */
   public Command getAutonomousCommand() {
-    // The selected command will be run in autonomous
+    // Create a voltage constraint to ensure we don't accelerate too fast
     return m_chooser.getSelected();
   }
-  
-
 }
 

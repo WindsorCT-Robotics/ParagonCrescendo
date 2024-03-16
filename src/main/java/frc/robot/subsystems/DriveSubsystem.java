@@ -7,6 +7,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Units.GearRatio;
@@ -14,6 +16,12 @@ import frc.robot.Units.Meters;
 import frc.robot.Units.Radians;
 import frc.robot.Units.Rotations;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix6.hardware.Pigeon2;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
 public class DriveSubsystem extends SubsystemBase {
     // CAN Bus Information
@@ -22,6 +30,7 @@ public class DriveSubsystem extends SubsystemBase {
     private static final int LEFT_FOLLOWER_TALONFX = 2;
     private static final int RIGHT_MAIN_TALONFX = 3;
     private static final int RIGHT_FOLLOWER_TALONFX = 4;
+    private static final int PIGEON_ID = 10;
 
     // 4 Motor Controllers for Drivetrain
     private final TalonFX leftMain = new TalonFX(LEFT_MAIN_TALONFX, CAN_BUS_NAME);
@@ -35,8 +44,33 @@ public class DriveSubsystem extends SubsystemBase {
     private final Meters wheelDiameter = new Meters(0.1524);
     private final Radians wheelCircumference = new Radians(Math.PI * wheelDiameter.asDouble());
 
+    // Feedforward/Feedback Gains
+    public static final double ksVolts = 0.64469;
+    public static final double kvVoltSecondsPerMeter = 1.6453;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.14978;
+    public static final double kPDriveVel = 0.0000045795;
+
+    // Differential Drive Kinematics
+    public static final double kTrackwidthMeters = 0.5588;
+    public static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    // Max Trajector Velocity and Acceleration
+    public static final double kMaxSpeedMetersPerSecond = 2;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
+
+    // Ramsete Parameters
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+
+    // Pigeon
+    private Pigeon2 gyro;
+
     // Differential Drive object to build Drivetrain with
     private DifferentialDrive drive;
+
+    // Odometry
+    private final DifferentialDriveOdometry odometry;
 
     public DriveSubsystem() {
         initializeTalonFX(leftMain.getConfigurator(), "left");
@@ -48,10 +82,20 @@ public class DriveSubsystem extends SubsystemBase {
         rightFollower.setControl(new Follower(rightMain.getDeviceID(), false));
 
         drive = new DifferentialDrive(leftMain, rightMain);
+        gyro = new Pigeon2(PIGEON_ID);
+
+        odometry = new DifferentialDriveOdometry(
+            gyro.getRotation2d(),
+            Meters.of(rotationsToMetersAsDouble(new Rotations(leftMain.getPosition().getValueAsDouble()))),
+            Meters.of(rotationsToMetersAsDouble(new Rotations(rightMain.getPosition().getValueAsDouble()))));
     }
 
     @Override
     public void periodic() {
+        odometry.update(gyro.getRotation2d(),
+            rotationsToMetersAsDouble(new Rotations(leftMain.getPosition().getValueAsDouble())),
+            rotationsToMetersAsDouble(new Rotations(rightMain.getPosition().getValueAsDouble())));
+
         SmartDashboard.putNumber("Position/Left Main (m)", -rotationsToMetersAsDouble(new Rotations(leftFollower.getPosition().getValueAsDouble())));
         SmartDashboard.putNumber("Position/Left Follower (m)", -rotationsToMetersAsDouble(new Rotations(leftFollower.getPosition().getValueAsDouble())));
         SmartDashboard.putNumber("Position/Right Main (m)", -rotationsToMetersAsDouble(new Rotations(rightMain.getPosition().getValueAsDouble())));
@@ -108,6 +152,55 @@ public class DriveSubsystem extends SubsystemBase {
         return
             rotations.asMeters(gearRatio, wheelCircumference)
                      .asDouble();
+    }
+
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(rotationsToMetersAsDouble(new Rotations(leftMain.getVelocity().getValueAsDouble())), 
+                                                rotationsToMetersAsDouble(new Rotations(leftMain.getVelocity().getValueAsDouble())));
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        odometry.resetPosition(
+            gyro.getRotation2d(),
+            Meters.of(rotationsToMetersAsDouble(new Rotations(leftMain.getPosition().getValueAsDouble()))),
+            Meters.of(rotationsToMetersAsDouble(new Rotations(rightMain.getPosition().getValueAsDouble()))),
+            pose);
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        leftMain.setVoltage(leftVolts);
+        rightMain.setVoltage(rightVolts);
+        drive.feed();
+    }
+
+    public void resetEncoders() {
+        leftMain.setPosition(0);
+        rightMain.setPosition(0);
+    }
+
+    public double getAverageEncoderDistance() {
+        return (rotationsToMetersAsDouble(new Rotations(leftMain.getPosition().getValueAsDouble())) +
+                rotationsToMetersAsDouble(new Rotations(rightMain.getPosition().getValueAsDouble()))) / 2.0;
+    }
+
+    public void setMaxOutput(double maxOutput) {
+        drive.setMaxOutput(maxOutput);
+    }
+
+    public void zeroHeading() {
+        gyro.reset();
+    }
+
+    public double getHeading() {
+        return gyro.getRotation2d().getDegrees();
+    }  
+    
+    public double getTurnRate() {
+        return -gyro.getRate();
     }
 
     public void stop() {
