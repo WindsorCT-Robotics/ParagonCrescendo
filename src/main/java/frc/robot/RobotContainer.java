@@ -14,6 +14,7 @@ package frc.robot;
 
 import frc.robot.commands.*;
 import frc.robot.commands.autos.*;
+import frc.robot.commands.elevator.*;
 import frc.robot.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -49,6 +50,7 @@ public class RobotContainer {
   private IntakeSubsystem intake;
   private ArmSubsystem arm;
   private OuttakeSubsystem outtake;
+  private ElevatorSubsystem elevator;
   /**
   * The container for the robot.  Contains subsystems, OI devices, and commands.
   */
@@ -62,6 +64,7 @@ public class RobotContainer {
     intake = new IntakeSubsystem();
     arm = new ArmSubsystem();
     outtake = new OuttakeSubsystem();
+    elevator = new ElevatorSubsystem();
 
     m_chooser.setDefaultOption("Drive Forward Auto Command", new DriveForwardAutoCommand(drive));
     m_chooser.addOption("Wait Drive Forward Auto Command", new WaitDriveForwardAutoCommand(drive));
@@ -110,6 +113,17 @@ public class RobotContainer {
 
     // Feed ring out the intake
     operatorController.a().whileTrue(new ParallelCommandGroup(new IntakeRollersManualCommand(intake, () -> -1), new OuttakeRollersManualCommand(outtake, () -> -1)));
+
+    //Elevator Controls
+    operatorController.rightTrigger(0.1)
+        .whileTrue(new ParallelCommandGroup(
+              new LeftUpElevatorCommand(elevator, () -> operatorController.getRightTriggerAxis()),
+              new RightUpElevatorCommand(elevator, () -> operatorController.getRightTriggerAxis())));
+
+    operatorController.leftTrigger(0.1)
+      .whileTrue(new ParallelCommandGroup(
+            new LeftDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis()),
+            new RightDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis())));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
