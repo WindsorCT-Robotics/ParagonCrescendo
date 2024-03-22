@@ -79,7 +79,7 @@ public class AmpScoreAutoCommand extends SequentialCommandGroup {
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.23, 0.5, new Rotation2d(282*Math.PI/180)), //-0.508, -0.451
+                new Pose2d(1.28, 0.5, new Rotation2d(290*Math.PI/180)), //-0.508, -0.451
                 // Pass config
                 config);
         } else {
@@ -90,7 +90,7 @@ public class AmpScoreAutoCommand extends SequentialCommandGroup {
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.23, -0.5, new Rotation2d(78*Math.PI/180)), //-0.508, -0.451
+                new Pose2d(1.28, -0.5, new Rotation2d(70*Math.PI/180)), //-0.508, -0.451
                 // Pass config
                 config);
         }
