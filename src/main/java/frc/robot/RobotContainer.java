@@ -71,6 +71,7 @@ public class RobotContainer {
     m_chooser.addOption("Do Nothing Auto Command", new DoNothingAutoCommand());
     m_chooser.addOption("Amp Score Auto Command", new AmpScoreAutoCommand(drive, arm, outtake, DriverStation.getAlliance()));
     m_chooser.addOption("Amp Score and Intake Auto Command", new AmpScoreIntakeAutoCommand(drive, arm, outtake, intake, DriverStation.getAlliance()));
+    m_chooser.addOption("Wait Amp Score Auto Command", new WaitAmpScoreCommand(drive, arm, outtake, DriverStation.getAlliance()));
     SmartDashboard.putData("Auto Mode", m_chooser);
 
     configureButtonBindings();

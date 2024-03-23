@@ -86,7 +86,7 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.28, 0.5, new Rotation2d(290*Math.PI/180)), //-0.508, -0.451
+                new Pose2d(1.28, -0.5, new Rotation2d(290*Math.PI/180)), //-0.508, -0.451
                 // Pass config
                 initialConfig);
         } else {
@@ -97,7 +97,7 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.28, -0.5, new Rotation2d(70*Math.PI/180)), //-0.508, -0.451
+                new Pose2d(1.28, 0.5, new Rotation2d(70*Math.PI/180)), //-0.508, -0.451
                 // Pass config
                 initialConfig);
         }
@@ -118,6 +118,7 @@ public class AmpScoreIntakeAutoCommand extends SequentialCommandGroup {
                 // RamseteCommand passes volts to the callback
                 drive::tankDriveVolts,
                 drive);
+
 
         // Create config for trajectory
         TrajectoryConfig intakeConfig =

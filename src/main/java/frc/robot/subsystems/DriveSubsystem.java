@@ -48,7 +48,7 @@ public class DriveSubsystem extends SubsystemBase {
     public static final double ksVolts = 0.64469;
     public static final double kvVoltSecondsPerMeter = 1.6453;
     public static final double kaVoltSecondsSquaredPerMeter = 0.14978;
-    public static final double kPDriveVel = 0.0000045795;
+    public static final double kPDriveVel = 0.000006;
 
     // Differential Drive Kinematics
     public static final double kTrackwidthMeters = 0.5588;
