@@ -16,7 +16,6 @@ import frc.robot.commands.*;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.elevator.*;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -69,9 +68,12 @@ public class RobotContainer {
     m_chooser.setDefaultOption("Drive Forward Auto Command", new DriveForwardAutoCommand(drive));
     m_chooser.addOption("Wait Drive Forward Auto Command", new WaitDriveForwardAutoCommand(drive));
     m_chooser.addOption("Do Nothing Auto Command", new DoNothingAutoCommand());
-    m_chooser.addOption("Amp Score Auto Command", new AmpScoreAutoCommand(drive, arm, outtake, DriverStation.getAlliance()));
-    m_chooser.addOption("Amp Score and Intake Auto Command", new AmpScoreIntakeAutoCommand(drive, arm, outtake, intake, DriverStation.getAlliance()));
-    m_chooser.addOption("Wait Amp Score Auto Command", new WaitAmpScoreCommand(drive, arm, outtake, DriverStation.getAlliance()));
+    m_chooser.addOption("Red - Amp Score Auto Command", new AmpScoreAutoRedCommand(drive, arm, outtake));
+    m_chooser.addOption("Red - Amp Score and Intake Auto Command", new AmpScoreIntakeAutoRedCommand(drive, arm, outtake, intake));
+    m_chooser.addOption("Red - Wait Amp Score Auto Command", new WaitAmpScoreRedCommand(drive, arm, outtake));
+    m_chooser.addOption("Blue - Amp Score Auto Command", new AmpScoreAutoBlueCommand(drive, arm, outtake));
+    m_chooser.addOption("Blue - Amp Score and Intake Auto Command", new AmpScoreIntakeAutoBlueCommand(drive, arm, outtake, intake));
+    m_chooser.addOption("Blue - Wait Amp Score Auto Command", new WaitAmpScoreBlueCommand(drive, arm, outtake));
     SmartDashboard.putData("Auto Mode", m_chooser);
 
     configureButtonBindings();
@@ -100,11 +102,11 @@ public class RobotContainer {
     driveController.leftBumper().onTrue(new IntakeNoteCommand(intake, outtake).until(operatorController.b()));
 
     // Amp Score with arm moving
-    driveController.rightBumper().onTrue(new AmpScoreCommand(arm, outtake));
+    driveController.rightBumper().onTrue(new AmpScoreCommand(arm, outtake).until(operatorController.x()));
 
     // Move arm up and down
-    operatorController.povUp().onTrue(new ExtendArmCommand(arm));
-    operatorController.povDown().onTrue(new RetractArmCommand(arm));
+    operatorController.povUp().onTrue(new ExtendArmCommand(arm).until(operatorController.x()));
+    operatorController.povDown().onTrue(new RetractArmCommand(arm).until(operatorController.x()));
 
     // Manually control intake rollers
     Trigger opLeftJoy = new Trigger(() -> Math.abs(operatorController.getLeftY()) > 0.2);
@@ -127,6 +129,9 @@ public class RobotContainer {
       .whileTrue(new ParallelCommandGroup(
             new RightDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis()),
             new LeftDownElevatorCommand(elevator, () -> operatorController.getLeftTriggerAxis())));
+
+    // Emergency Rehome Arm
+    operatorController.y().and(() -> arm.getArmState() == ArmSubsystem.ArmState.UNKNOWN).onTrue(new HomeArmCommand(arm).until(operatorController.x()));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
