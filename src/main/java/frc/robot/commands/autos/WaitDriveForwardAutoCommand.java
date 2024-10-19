@@ -13,7 +13,7 @@ public class WaitDriveForwardAutoCommand extends SequentialCommandGroup {
         addRequirements(this.drive);
         addCommands(
             new WaitCommand(8),
-            new DriveCommand(() -> 0.35, () -> 0, drive).withTimeout(4)
+            new DriveCommand(() -> -0.35, () -> 0, drive).withTimeout(4)
         );
     }
 }

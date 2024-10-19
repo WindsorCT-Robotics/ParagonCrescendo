@@ -18,36 +18,17 @@ import frc.robot.commands.AmpScoreCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import java.util.Optional;
 
-public class AmpScoreAutoCommand extends SequentialCommandGroup {
+public class AmpScoreAutoBlueCommand extends SequentialCommandGroup {
     DriveSubsystem drive;
     ArmSubsystem arm;
     OuttakeSubsystem outtake;
-    
-    public enum AllianceColor {
-        BLUE,
-        RED
-    }
 
-    AllianceColor color;
-
-    public AmpScoreAutoCommand(DriveSubsystem drive, ArmSubsystem arm, OuttakeSubsystem outtake, Optional<Alliance> alliance) {
+    public AmpScoreAutoBlueCommand(DriveSubsystem drive, ArmSubsystem arm, OuttakeSubsystem outtake) {
         addRequirements(drive);
         this.drive = drive;
         this.arm = arm;
         this.outtake = outtake;
-
-        if (alliance.isPresent()) {
-            if(alliance.get() == Alliance.Blue) {
-                color = AllianceColor.BLUE;
-            } else {
-                color = AllianceColor.RED;
-            }
-        } else {
-            color = AllianceColor.BLUE;
-        }
 
         var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -70,30 +51,16 @@ public class AmpScoreAutoCommand extends SequentialCommandGroup {
                 .setReversed(true);
 
         // An example trajectory to follow. All units in meters.
-        Trajectory initialDriveTrajectory;
-        if (color == AllianceColor.BLUE) {
-            initialDriveTrajectory =
+        Trajectory initialDriveTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, new Rotation2d(Math.PI)),
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.23, 0.5, new Rotation2d(282*Math.PI/180)), //-0.508, -0.451
+                new Pose2d(1.28, 0.5, new Rotation2d(290*Math.PI/180)), //-0.508, -0.451
                 // Pass config
                 config);
-        } else {
-            initialDriveTrajectory =
-            TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(Math.PI)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1.23, -0.5, new Rotation2d(78*Math.PI/180)), //-0.508, -0.451
-                // Pass config
-                config);
-        }
 
         RamseteCommand initialDriveCommand =
             new RamseteCommand(

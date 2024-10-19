@@ -11,7 +11,7 @@ public class DriveForwardAutoCommand extends SequentialCommandGroup {
         this.drive = drive;
         addRequirements(this.drive);
         addCommands(
-            new DriveCommand(() -> 0.35, () -> 0, this.drive).withTimeout(4)
+            new DriveCommand(() -> -0.35, () -> 0, this.drive).withTimeout(4)
         );
     }
 }
